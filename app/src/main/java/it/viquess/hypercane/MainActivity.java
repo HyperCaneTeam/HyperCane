@@ -1,54 +1,78 @@
 package it.viquess.hypercane;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.view.View;
+import android.webkit.WebView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import android.bluetooth.BluetoothAdapter;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.widget.TextView;
-import android.widget.Toast;
-
 public class MainActivity extends AppCompatActivity {
 
-    private TextView bt_connection;
-    private BluetoothAdapter BA;
+    //private TextView bt_connection;
+    private WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bt_connection = findViewById(R.id.bt_connection);
-        BA = BluetoothAdapter.getDefaultAdapter();
+        webView = findViewById(R.id.web_view);
+        //webView.setVisibility(View.INVISIBLE);
 
-        if (BA == null) {
-            Toast.makeText(this, "Bluetooth non supportato.", Toast.LENGTH_LONG).show();
-            finish();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
-        if (!BA.isEnabled()) {
-            bt_connection.setText("Bluetooth disattivato.");
-            finish();
-        }
+        sendMail(getCoords());
+    }
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED)
+    /*private void checkConnection() {
+
+        BluetoothDevice hyperCane = BA.getRemoteDevice("HyperCane");
+
+        if (hyperCane == null) {
+            Toast.makeText(this, "Il dispositivo HyperCane non è stato trovato", Toast.LENGTH_SHORT).show();
             return;
-
-        String name = BA.getName();
-
-        if (!name.contains("HyperCane")) {
-            bt_connection.setText("HyperCane non connessa.");
-            finish();
         }
 
-        bt_connection.setText("HyperCane connessa!");
-        //https://www.youtube.com/watch?v=iFtjox9_zAI
-        //https://www.youtube.com/watch?v=TtpLcsQ4nMw
-        
-        /* Genera il codice per un'applicazione Java per android in grado di controllare se il telefono è connesso via bluetooth ad un dispositivo chiamato "HyperCane"
-            Genera il codice per un'applicazione Java per android in grado di Inviare una richiesta POST contenente informazioni sulla posizione GPS al server PHP utilizzando HttpURLConnection
-            Genera il codice per un'applicazione Java per android in grado di ricevere un segnale bluetooth e settare il textview "bt_conn" a "Ciao!" 
-            */
+        if (BluetoothAdapter.checkBluetoothAddress(hyperCane.getAddress()) && BA.getConnectionState(hyperCane) == BluetoothAdapter.STATE_CONNECTED) {
+            Toast.makeText(this, "Il dispositivo HyperCane è connesso via Bluetooth", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Toast.makeText(this, "Il dispositivo HyperCane non è connesso via Bluetooth", Toast.LENGTH_SHORT).show();
+
+
+    }*/
+
+    private Location getLocation() {
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+
+        return lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+    }
+
+    private String getCoords() {
+        Location loc = getLocation();
+
+        if (loc == null)
+            return "";
+
+        return loc.getLatitude() + "," + loc.getLongitude();
+    }
+
+    private void sendMail(String coords) {
+        webView.reload();
+        webView.loadUrl("https://loriscl.altervista.org/hypercane/?coordinate=" + coords + "&mail1=vincenzo.bova05@gmail.com");
     }
 }
