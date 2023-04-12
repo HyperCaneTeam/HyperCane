@@ -45,5 +45,10 @@ public class MainActivity extends AppCompatActivity {
         bt_connection.setText("HyperCane connessa!");
         //https://www.youtube.com/watch?v=iFtjox9_zAI
         //https://www.youtube.com/watch?v=TtpLcsQ4nMw
+        
+        */ Genera il codice per un'applicazione Java per android in grado di controllare se il telefono è connesso via bluetooth ad un dispositivo chiamato "HyperCane"
+            Genera il codice per un'applicazione Java per android in grado di Inviare una richiesta POST contenente informazioni sulla posizione GPS al server PHP utilizzando HttpURLConnection
+            Genera il codice per un'applicazione Java per android in grado di ricevere un segnale bluetooth e settare il textview "bt_conn" a "Ciao!" 
+            */
     }
 }
