@@ -3,4 +3,6 @@
     <string name="bt_connection">BT connection</string>
     <string name="logo">logo</string>
     <string name="hypercane_connessa">HyperCane connessa!</string>
+    <string name="powered_by_hypercaneteam">Powered by HyperCaneTeam</string>
+    <string name="la_stampella_non_presenta_nalcun_tipo_di_problema">La stampella non presenta\nalcun tipo di problema!</string>
 </resources>
